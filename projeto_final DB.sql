@@ -1,4 +1,8 @@
-CREATE TABLE tarefas (
+CREATE DATABASE IF NOT EXISTS to_do_list_db;
+ 
+USE to_do_list_db;
+ 
+CREATE TABLE IF NOT EXISTS tarefas (
   id          	INT AUTO_INCREMENT PRIMARY KEY,
   name        		VARCHAR(255) NOT NULL,
   description 		TEXT,
