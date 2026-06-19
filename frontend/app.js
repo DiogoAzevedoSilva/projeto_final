@@ -6,6 +6,8 @@ let tarefas = [
     description: "Rever Express, rotas e ligação ao MySQL.",
     category: "profissional",
     priority: 3,
+    date_start: "2026-06-18",
+    date_finish_pred: "2026-06-25",
     status: "iniciado"
   }
 ];
@@ -38,8 +40,12 @@ function criarCardTarefa(tarefa) {
           ${tarefa.status}
         </span>
       </div>
-
-      <div class="tarefa-acoes">
+    <div class="tarefa-datas">
+      <span>📅 Início: ${tarefa.date_start || "-"}</span>
+      <span>🏁 Fim: ${tarefa.date_finish_pred || "-"}</span>
+    </div>
+    
+    <div class="tarefa-acoes">
         <button class="btn-concluir">Concluir</button>
         <button class="btn-editar">Editar</button>
         <button class="btn-apagar">Apagar</button>
@@ -64,14 +70,18 @@ if (formTarefa) {
   formTarefa.addEventListener("submit", function (event) {
     event.preventDefault();
 
-    const novaTarefa = {
-      id: Date.now(),
-      name: document.getElementById("name").value,
-      description: document.getElementById("description").value,
-      category: document.getElementById("category").value,
-      priority: document.getElementById("priority").value,
-      status: "ainiciar"
-    };
+  const novaTarefa = {
+  id: Date.now(),
+  name: document.getElementById("name").value,
+  description: document.getElementById("description").value,
+  category: document.getElementById("category").value,
+  priority: document.getElementById("priority").value,
+
+  date_start: document.getElementById("date_start").value,
+  date_finish_pred: document.getElementById("date_finish_pred").value,
+
+  status: "ainiciar"
+};
 
     tarefas.push(novaTarefa);
 
