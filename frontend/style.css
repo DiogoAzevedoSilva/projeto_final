@@ -1,0 +1,507 @@
+/* =========================
+   RESET E BASE
+========================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f6f7fb;
+  color: #1f2937;
+  line-height: 1.6;
+}
+
+:root {
+  --bg: #f6f7fb;
+  --card: #ffffff;
+  --text: #1f2937;
+  --title: #111827;
+  --muted: #4b5563;
+  --border: #e5e7eb;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  max-width: 1900px;
+  margin: 0 auto;
+  padding: 10px 32px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-logo {
+  width: 220px;
+  height: auto;
+}
+
+
+.brand h1 {
+  font-size: 1.4rem;
+  color: #111827;
+}
+
+nav ul {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+}
+
+nav a {
+  text-decoration: none;
+  color: #374151;
+  font-weight: 600;
+  font-size: 1.5rem;
+  transition: 0.2s;
+}
+
+nav a:hover {
+  color: #2563eb;
+}
+
+/* =========================
+   LAYOUT PRINCIPAL
+========================= */
+
+main {
+  max-width: 1920px;
+  margin: 40px auto;
+  padding: 0 32px;
+}
+
+section {
+  margin-bottom: 32px;
+}
+
+#bemvindo,
+#tarefas {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 32px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 16px;
+  color: #111827;
+}
+
+h3 {
+  margin: 28px 0 16px;
+  color: #111827;
+}
+
+p {
+  margin-bottom: 16px;
+  color: #4b5563;
+}
+
+/* =========================
+   BOTÕES
+========================= */
+
+button,
+.btn-primary {
+  border: none;
+  border-radius: 12px;
+  padding: 10px 16px;
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+button:hover,
+.btn-primary:hover {
+  background: #1d4ed8;
+}
+
+#btnAdicionar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  padding: 0;
+}
+
+/* =========================
+   FORMULÁRIO
+========================= */
+
+.hidden {
+  display: none;
+}
+
+form {
+  margin-top: 24px;
+}
+
+fieldset {
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+legend {
+  font-weight: 700;
+  padding: 0 8px;
+}
+
+label {
+  display: block;
+  margin: 16px 0 6px;
+  font-weight: 600;
+  color: #374151;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 1rem;
+  background: #ffffff;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid #bfdbfe;
+  border-color: #2563eb;
+}
+
+/* =========================
+   LISTA / CARDS DE TAREFAS
+========================= */
+
+.lista-tarefas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.tarefa-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+}
+
+.tarefa-card h4 {
+  margin-bottom: 8px;
+  color: #111827;
+}
+
+.tarefa-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tarefa-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.tag,
+[class^="category-"],
+[class^="priority-"],
+[class^="status-"] {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+
+.status-pendente {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-concluida {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.tarefa-acoes {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.tarefa-acoes button {
+  padding: 8px 10px;
+  font-size: 0.85rem;
+}
+
+.btn-apagar {
+  background: #ef4444;
+}
+
+.btn-apagar:hover {
+  background: #dc2626;
+}
+
+.btn-editar {
+  background: #6b7280;
+}
+
+.btn-editar:hover {
+  background: #4b5563;
+}
+
+.btn-concluir {
+  background: #16a34a;
+}
+
+.btn-concluir:hover {
+  background: #15803d;
+}
+
+.resumo-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin: 24px 0;
+}
+
+.card-resumo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 18px;
+}
+
+.summary-icon {
+  width: 48px;
+  height: 48px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+  text-align: center;
+  padding: 24px;
+  color: #6b7280;
+}
+
+/* =========================
+   RESPONSIVO
+========================= */
+
+@media (max-width: 700px) {
+  header {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  nav ul {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h2 {
+    font-size: 1.6rem;
+  }
+
+  #bemvindo,
+  #tarefas {
+    padding: 24px;
+  }
+
+  main {
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+.tarefa-acoes {
+  flex-direction: column;
+}
+
+.tarefa-acoes button {
+  width: 100%;
+}
+}
+
+/* =========================
+   CATEGORIAS
+========================= */
+
+.category-pessoal,
+.tag-pessoal {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
+.category-profissional,
+.tag-profissional {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.category-bemestar,
+.tag-bemestar,
+.category-bem_estar,
+.tag-bem_estar {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.category-lazer,
+.tag-lazer {
+  background: #ffedd5;
+  color: #9a3412;
+}
+
+.category-outro,
+.tag-outro {
+  background: #e5e7eb;
+  color: #374151;
+}
+/* =========================
+   PRIORIDADES
+========================= */
+
+.priority-low {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.priority-medium {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.priority-high {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.status-ainiciar {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.status-iniciado {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.status-concluido {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-atrasado {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* =========================
+   RESUMO / PROGRESSO
+========================= */
+
+.tarefas-resumo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.tarefas-resumo span {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.tarefa-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.09);
+}
+
+.tarefa-card {
+  transition: 0.2s ease;
+}
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 60px;
+
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 40px;
+
+  margin-bottom: 32px;
+}
+
+.hero-texto {
+  flex: 1;
+}
+
+.hero-texto h2 {
+  margin-bottom: 12px;
+}
+
+.hero-texto p {
+  margin-bottom: 0;
+}
+
+.hero-img {
+  width: 640px;
+  height: auto;
+}
