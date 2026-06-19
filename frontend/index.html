@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskFlow</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header>
+    <div class="brand">
+      <img src="assets/logo-taskflow.png" alt="Logo TaskFlow" class="brand-logo">
+          </div>
+
+    <nav aria-label="Menu principal">
+      <ul>
+        <li><a href="#">Início</a></li>
+        <li><a href="#tarefas">Tarefas</a></li>
+        <li><a href="#sobre">Sobre</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-texto">
+        <h2>Bem-vindo de volta!</h2>
+        <p>Organize as suas tarefas e acompanhe o seu progresso num só lugar.</p>
+      </div>
+
+      <img src="assets/hero-tasks.png" alt="Ilustração de tarefas" class="hero-img">
+    </section>
+
+    <section id="tarefas">
+      <div class="topo-tarefas">
+        <div>
+          <h2>Minhas tarefas</h2>
+          <p>Organize as suas tarefas por categoria, prioridade e estado.</p>
+        </div>
+
+        <button id="btnAdicionar" type="button" aria-label="Adicionar tarefa">+</button>
+      </div>
+
+      <div class="resumo-cards">
+        <div class="card-resumo">
+          <img src="assets/icon-total.svg" alt="Total" class="summary-icon">
+          <div>
+            <span>Total</span>
+            <strong>0</strong>
+          </div>
+        </div>
+
+        <div class="card-resumo">
+          <img src="assets/icon-concluidas.svg" alt="Concluídas" class="summary-icon">
+          <div>
+            <span>Concluídas</span>
+            <strong>0</strong>
+          </div>
+        </div>
+
+        <div class="card-resumo">
+          <img src="assets/icon-andamento.svg" alt="Em andamento" class="summary-icon">
+          <div>
+            <span>Em andamento</span>
+            <strong>0</strong>
+          </div>
+        </div>
+
+        <div class="card-resumo">
+          <img src="assets/icon-atrasadas.svg" alt="Atrasadas" class="summary-icon">
+          <div>
+            <span>Atrasadas</span>
+            <strong>0</strong>
+          </div>
+        </div>
+      </div>
+
+      <form id="formTarefa">
+        <fieldset>
+          <legend>Nova tarefa</legend>
+
+          <label for="name">Nome da tarefa</label>
+          <input type="text" id="name" name="name" placeholder="Ex.: Estudar JavaScript">
+
+          <label for="description">Descrição</label>
+          <textarea id="description" name="description" rows="4" placeholder="Descreva a tarefa"></textarea>
+
+          <label for="category">Categoria</label>
+          <select id="category" name="category">
+            <option value="pessoal">Pessoal</option>
+            <option value="profissional">Profissional</option>
+            <option value="bem_estar">Bem-estar</option>
+            <option value="lazer">Lazer</option>
+            <option value="outro">Outro</option>
+          </select>
+
+          <label for="priority">Prioridade</label>
+          <select id="priority" name="priority">
+            <option value="1">Low</option>
+            <option value="2">Medium</option>
+            <option value="3">High</option>
+          </select>
+
+          <button type="submit">Guardar tarefa</button>
+        </fieldset>
+      </form>
+
+      <div class="lista-tarefas">
+        <div class="tarefa-card">
+          <h4>Estudar Node.js</h4>
+          <p>Rever Express, rotas e ligação ao MySQL.</p>
+
+          <div class="tarefa-meta">
+            <span class="tag tag-profissional">Profissional</span>
+            <span class="priority-high">High</span>
+            <span class="status-iniciado">Iniciado</span>
+          </div>
+
+          <div class="tarefa-acoes">
+            <button class="btn-concluir">Concluir</button>
+            <button class="btn-editar">Editar</button>
+            <button class="btn-apagar">Apagar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sobre" class="sobre">
+      <h2>Sobre o TaskFlow</h2>
+      <p>Uma aplicação simples para organizar tarefas, prioridades e progresso.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>TaskFlow © 2026</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
