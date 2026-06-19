@@ -8,6 +8,8 @@ const path = require("path")
 const mysql = require("mysql2/promise")
 const PORT = 3000
 
+const dataAtual = Date().toISOString().slice(0, 10)
+
 // Pool
 const pool = mysql.createPool({
   host: process.env.DATABASE_HOST,
@@ -29,11 +31,8 @@ function validarTarefa(req, res, next){
   const descriptionLimpo = String(description).trim()
   const priorityNumero = Number(priority)
   const categoryLimpo = String(category).trim().toLowerCase() 
-  const date_startLimpo = String(date_start)  // Possivelmente não é necessário se date_start já vier como string
-  // const date_startLimpo = date_start.toISOString().slice(0, 10) Se vier em formato universal de data (não deve ser o caso)
-  const date_finish_predLimpo = String(date_finish_pred)  // Possivelmente não é necessário se date_finish_pred já vier como string
-  // const date_finish_predLimpo = date_finish_predLimpo.toISOString().slice(0, 10) Se vier em formato universal de data (não deve ser o caso)
-  const dataAtual = Date().toISOString().slice(0, 10)
+  const date_startLimpo = String(date_start)  
+  const date_finish_predLimpo = String(date_finish_pred)  
 
   if (nameLimpo.length < 2 || nameLimpo.length > 200) {
     return res.status(400).json({erro: "Nome da tarefa obrigatório (entre 2 e 200 caracteres)"}) 
@@ -41,9 +40,9 @@ function validarTarefa(req, res, next){
   if (descriptionLimpo.length === 0) {
     return res.status(400).json({erro: "Descrição da tarefa obrigatoria"})
   }
-  // if (priorityNumero < 1 || priorityNumero > 3){
-  //   return res.status(400).json({erro: "Prioridade da tarefa obrigatoria"})
-  // }
+  if (priorityNumero < 1 || priorityNumero > 3){
+    return res.status(400).json({erro: "Prioridade da tarefa obrigatoria"})
+  }
 
   if (!categoryValidas.includes(categoryLimpo)) {
     return res.status(400).json({erro: "Categoria inválida"})
@@ -55,7 +54,7 @@ function validarTarefa(req, res, next){
     return res.status(400).json({erro: "A data de início da tarefa não pode posterior à data prevista de conclusão"}) 
   }
   if (date_finish_predLimpo < dataAtual){
-    return res.status(400).json({erro: "A data prevista de conclusão da tarefa não pode ser no passado"}) 
+    return res.status(400).json({erro: "A data prevista de conclusão da tarefa não pode ser no passado"}) // português está horrível
   }
 
  
@@ -66,12 +65,7 @@ function validarTarefa(req, res, next){
     ano: anoNumero
   }
   next()
-
 }
-
-// Date().toISOString().slice(0, 10)
-
-
 
 
 // ROTAS
@@ -110,20 +104,10 @@ app.post("/api/tarefas", validarTarefa, async (req,res) =>{
   if (!name || !description || !category || !date_start || !date_finish_pred){
       return res.status(400).json({erro: "Preencher campos obrigatórios"})
   }
-  const dataHoje = Date().toISOString().slice(0, 10)
   let status = "iniciada"
-  if (date_start > dataHoje){
+  if (date_start > dataAtual){
     status = "planeada"
   }
-  // if (priority === "baixa"){
-  //   priority = 1
-  // }
-  // else if (priority === "média"){
-  //   priority = 2
-  // }
-  // else {
-  //   priority = 3
-  // }
   const query ="INSERT INTO musica (name, description, status, priority, category, date_start, date_finish_pred) VALUES (?,?,?,?,?,?,?)"
   const [resposta] = await pool.execute(query, [name, description, status, priority, category, date_start, date_finish_pred])
   res.status(201).json({mensagem: "Tarefa criada com sucesso!"})
@@ -161,30 +145,39 @@ app.patch("/api/tarefas/:id/status", async (req,res)=>{
   const date_finish_real = Date().toISOString().slice(0, 10)
   const query2 = "UPDATE tarefas SET status = ?, date_finish_real = ?  WHERE id = ?"
   await pool.execute(query2, [novoValor, date_finish_real, id])
-  // confirmar se date_finish real está correcto!
   res.status(200).json({mensagem: "Tarefa concluída!"})
 })
 
 
 // PATCH  -- Alterar o status para " atrasado"
-// acho que isto não é feito por uma rota mas pelo servidor quando a data actual ultrapassa 
-// a data "date_finish_pred"?!
+app.patch("/api/tarefas/:id/status", async (req,res)=>{
+  const id = Number(req.params.id)
+  const query = "SELECT * FROM tarefas WHERE id = ?"
+  const [tarefa] = await pool.execute(query, [id])
+  if (tarefa.length === 0){
+      res.status(404).json({mensagem: "Esta tarefa não existe!"})
+  }
+  const novoValor = "atrasado"
+  const query2 = "UPDATE tarefas SET status = ?  WHERE id = ?"   
+  if (dataAtual > date_finish_pred){
+      await pool.execute(query2, [novoValor, id])
+  }
+  res.status(200).json({mensagem: "Tarefa está atrasada!"})
+})
 
 
 
-
-  // DELETE
-  app.delete("/api/tarefas/:id", async (req,res)=>{
-    const id = Number(req.params.id)
-    const query = "SELECT * FROM tarefas WHERE id = ?"
-    const [tarefa] = await pool.execute(query, [id])
-    if (tarefa.length === 0){
-        res.status(404).json({mensagem: "Esta tarefa não existe!"})
-    }
-    const query2 = "DELETE FROM tarefas WHERE id = ?"
-    await pool.execute(query2, [id])
-
-    res.status(200).json({mensagem: "Tarefa eliminada com sucesso"})
+// DELETE
+app.delete("/api/tarefas/:id", async (req,res)=>{
+  const id = Number(req.params.id)
+  const query = "SELECT * FROM tarefas WHERE id = ?"
+  const [tarefa] = await pool.execute(query, [id])
+  if (tarefa.length === 0){
+      res.status(404).json({mensagem: "Esta tarefa não existe!"})
+  }
+  const query2 = "DELETE FROM tarefas WHERE id = ?"
+  await pool.execute(query2, [id])
+  res.status(200).json({mensagem: "Tarefa eliminada com sucesso"})
 })
 
 
