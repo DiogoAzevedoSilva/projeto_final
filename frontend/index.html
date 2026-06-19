@@ -16,8 +16,8 @@
     <nav aria-label="Menu principal">
       <ul>
         <li><a href="#">Início</a></li>
-        <li><a href="#tarefas">Tarefas</a></li>
-        <li><a href="#sobre">Sobre</a></li>
+        <a href="tarefas.html">Tarefas</a>
+        <li><a href="sobre.html">Sobre</a></li>
       </ul>
     </nav>
   </header>
@@ -39,7 +39,7 @@
           <p>Organize as suas tarefas por categoria, prioridade e estado.</p>
         </div>
 
-        <button id="btnAdicionar" type="button" aria-label="Adicionar tarefa">+</button>
+        <a href="tarefas.html" id="btnAdicionar">+</a>
       </div>
 
       <div class="resumo-cards">
@@ -76,37 +76,7 @@
         </div>
       </div>
 
-      <form id="formTarefa">
-        <fieldset>
-          <legend>Nova tarefa</legend>
-
-          <label for="name">Nome da tarefa</label>
-          <input type="text" id="name" name="name" placeholder="Ex.: Estudar JavaScript">
-
-          <label for="description">Descrição</label>
-          <textarea id="description" name="description" rows="4" placeholder="Descreva a tarefa"></textarea>
-
-          <label for="category">Categoria</label>
-          <select id="category" name="category">
-            <option value="pessoal">Pessoal</option>
-            <option value="profissional">Profissional</option>
-            <option value="bem_estar">Bem-estar</option>
-            <option value="lazer">Lazer</option>
-            <option value="outro">Outro</option>
-          </select>
-
-          <label for="priority">Prioridade</label>
-          <select id="priority" name="priority">
-            <option value="1">Low</option>
-            <option value="2">Medium</option>
-            <option value="3">High</option>
-          </select>
-
-          <button type="submit">Guardar tarefa</button>
-        </fieldset>
-      </form>
-
-      <div class="lista-tarefas">
+            <div class="lista-tarefas">
         <div class="tarefa-card">
           <h4>Estudar Node.js</h4>
           <p>Rever Express, rotas e ligação ao MySQL.</p>
