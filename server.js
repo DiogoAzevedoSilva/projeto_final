@@ -4,11 +4,11 @@ require("dotenv").config()
 // Modulos importados
 const express = require("express")
 const app = express()
-const path = require("path")
+// const path = require("path")  -- não está a ser utilizado!!
 const mysql = require("mysql2/promise")
 const PORT = 3000
 
-const dataAtual = Date().toISOString().slice(0, 10)
+const dataAtual = new Date().toISOString().slice(0, 10) // só corre quando o servidor é iniciado!
 
 // Pool
 const pool = mysql.createPool({
@@ -27,6 +27,28 @@ app.use(express.json())
 function validarTarefa(req, res, next){
   const categoryValidas = ["bem_estar", "lazer", "pessoal", "profissional", "outro"]
   const {name, description, priority, category, date_start, date_finish_pred} = req.body
+
+  // lidar com valores inexistentes
+  if (typeof name !== "string" || name.trim().length === 0) {
+    return res.status(400).json({erro: "Nome da tarefa é obrigatório"})
+  }
+  if (typeof description !== "string" || description.trim().length === 0) {
+    return res.status(400).json({erro: "Descrição da tarefa é obrigatória"})
+  }
+  if (priority === undefined || priority === null || priority === "") {
+    return res.status(400).json({erro: "Prioridade da tarefa é obrigatória"})
+  }
+  if (typeof category !== "string" || category.trim().length === 0) {
+    return res.status(400).json({erro: "Categoria da tarefa é obrigatória"})
+  }
+  if (!date_start) {
+    return res.status(400).json({erro: "Data de início é obrigatória"})
+  }
+  if (!date_finish_pred) {
+    return res.status(400).json({erro: "Data prevista de conclusão é obrigatória"})
+  }
+
+
   const nameLimpo = String(name).trim()
   const descriptionLimpo = String(description).trim()
   const priorityNumero = Number(priority)
@@ -59,11 +81,23 @@ function validarTarefa(req, res, next){
 
  
   req.body = {
-    titulo: tituloLimpo,
-    artista: artistaLimpo,
-    genero: generoLimpo,
-    ano: anoNumero
+  name: nameLimpo,
+  description: descriptionLimpo,
+  priority: priorityNumero,
+  category: categoryLimpo,
+  date_start: date_startLimpo,
+  date_finish_pred: date_finish_predLimpo
+}
+  next()
+}
+
+// Midleware para validar o :id dos parametros
+function validarId(req, res, next){
+  const id = Number(req.params.id)
+  if (!Number.isInteger(id) || id <= 0) {
+    return res.status(400).json({erro: "ID inválido"})
   }
+  req.params.id = id // já convertido, evita repetir Number() nas rotas
   next()
 }
 
@@ -76,108 +110,152 @@ app.get("/", (req,res)=>{
   res.json(mensagem)
 })
 
-// GET
+// GET all
 app.get("/api/tarefas", async (req,res)=>{
   try { 
-    const get_tarefas = await pool.execute("SELECT * FROM to_do_list_db.tarefas")
-    res.status(200).json(get_tarefas[0])
+    const get_tarefas = await pool.execute("SELECT * FROM tarefas")
+    return res.status(200).json(get_tarefas[0])
   }
   catch (error) {
-    res.status(400).json({ error: "Erro ao buscar tarefas" })
+    return res.status(400).json({ error: "Erro ao buscar tarefas" })
   }
 })
 
 // GET :id
-app.get("/api/tarefas/:id", async (req,res) =>{
-  const id = Number(req.params.id)
-  const query = "SELECT * FROM tarefas WHERE id = ?"
-  const [tarefa] = await pool.execute(query, [id])
-  if (tarefa.length === 0){
-      res.status(404).json({mensagem: "Esta tarefa não existe!"})
-  }
-  res.status(200).json(tarefa[0])
-})
-
-  // POST --- É preciso criar o middleware validarTarefa
-app.post("/api/tarefas", validarTarefa, async (req,res) =>{
-  const {name, description, priority, category, date_start, date_finish_pred} = req.body
-  if (!name || !description || !category || !date_start || !date_finish_pred){
-      return res.status(400).json({erro: "Preencher campos obrigatórios"})
-  }
-  let status = "iniciada"
-  if (date_start > dataAtual){
-    status = "planeada"
-  }
-  const query ="INSERT INTO musica (name, description, status, priority, category, date_start, date_finish_pred) VALUES (?,?,?,?,?,?,?)"
-  const [resposta] = await pool.execute(query, [name, description, status, priority, category, date_start, date_finish_pred])
-  res.status(201).json({mensagem: "Tarefa criada com sucesso!"})
-})
-
-
-// PUT
-app.put("/api/tarefas/:id", validarTarefa, async (req,res) =>{
-    const id = Number(req.params.id)
+app.get("/api/tarefas/:id", validarId, async (req,res) =>{
+  try {
+    const id = req.params.id
     const query = "SELECT * FROM tarefas WHERE id = ?"
     const [tarefa] = await pool.execute(query, [id])
     if (tarefa.length === 0){
-        res.status(404).json({mensagem: "Esta tarefa não existe!"})
+        return res.status(404).json({mensagem: "Esta tarefa não existe!"})
     }
+    return res.status(200).json(tarefa[0])
+  } catch (error) {
+    return res.status(500).json({erro: "Erro no servidor!"})
+  }
+})
+
+  // POST 
+app.post("/api/tarefas", validarTarefa, async (req,res) =>{
+  try {
     const {name, description, priority, category, date_start, date_finish_pred} = req.body
     if (!name || !description || !category || !date_start || !date_finish_pred){
         return res.status(400).json({erro: "Preencher campos obrigatórios"})
     }
-    const query2 = "UPDATE tarefa SET name = ?, description = ?, priority = ?, category = ?, date_start = ?, date_finish_pred = ? WHERE id = ?"
-    const [resultado] = await pool.execute(query2, [name, description, priority, category, date_start, date_finish_pred, id])
- 
-    res.status(200).json({mensagem: "Tarefa alterada com sucesso"})
-  })
+    let status = "iniciado"
+    if (date_start > dataAtual){
+      status = "planeado"
+    }
+    const query ="INSERT INTO tarefas (name, description, status, priority, category, date_start, date_finish_pred) VALUES (?,?,?,?,?,?,?)"
+    const [resposta] = await pool.execute(query, [name, description, status, priority, category, date_start, date_finish_pred])
+    return res.status(201).json({mensagem: "Tarefa criada com sucesso!"})
+  } catch (error) {
+    return res.status(500).json({erro: "Erro no servidor!"})
+  }
+})
+
+
+// PUT
+app.put("/api/tarefas/:id", validarId, validarTarefa,  async (req,res) =>{
+  try {
+    const id = req.params.id
+    const query = "SELECT * FROM tarefas WHERE id = ?"
+    const [tarefa] = await pool.execute(query, [id])
+    if (tarefa.length === 0){
+        return res.status(404).json({mensagem: "Esta tarefa não existe!"})
+  }
+
+  // tarefas concluídas não podem ser alteradas
+  if (tarefa[0].status === "concluido") {
+    return res.status(400).json({erro: "Não é possível alterar uma tarefa já concluída"})
+  }
+
+  const {name, description, priority, category, date_start, date_finish_pred} = req.body
+  if (!name || !description || !category || !date_start || !date_finish_pred){
+      return res.status(400).json({erro: "Preencher campos obrigatórios"})
+  }
+
+  // só recalcula o status se a tarefa ainda não foi concluída nem está atrasada
+  const statusAtual = tarefa[0].status
+  let novoStatus = statusAtual
+  if (statusAtual === "planeado" || statusAtual === "iniciado") {
+    novoStatus = date_start > dataAtual ? "planeado" : "iniciado"
+  } 
+  else if (statusAtual === "atrasado" && date_finish_pred >= dataAtual) {
+  // deadline foi corrigido para o futuro, deixa de estar atrasada
+  novoStatus = date_start > dataAtual ? "planeado" : "iniciado"
+  }
+
+  const query2 = "UPDATE tarefas SET name = ?, description = ?, status = ?, priority = ?, category = ?, date_start = ?, date_finish_pred = ? WHERE id = ?"
+  await pool.execute(query2, [name, description, novoStatus, priority, category, date_start, date_finish_pred, id])
+  res.status(200).json({mensagem: "Tarefa alterada com sucesso"})
+  } catch (error) {
+    res.status(500).json({erro: "Erro no servidor!"})
+  }
+})
 
 
 // PATCH  -- Alterar o status para "concluído"
-app.patch("/api/tarefas/:id/status", async (req,res)=>{
-  const id = Number(req.params.id)
-  const query = "SELECT * FROM tarefas WHERE id = ?"
-  const [tarefa] = await pool.execute(query, [id])
-  if (tarefa.length === 0){
-      res.status(404).json({mensagem: "Esta tarefa não existe!"})
+app.patch("/api/tarefas/:id/statusConcluido", validarId, async (req,res)=>{
+  try {
+    const id = req.params.id
+    const query = "SELECT * FROM tarefas WHERE id = ?"
+    const [tarefa] = await pool.execute(query, [id])
+    if (tarefa.length === 0){
+        return res.status(404).json({mensagem: "Esta tarefa não existe!"})
+    }
+    const novoValor = "concluido"
+    const date_finish_real = new Date().toISOString().slice(0, 10)
+    const query2 = "UPDATE tarefas SET status = ?, date_finish_real = ?  WHERE id = ?"
+    await pool.execute(query2, [novoValor, date_finish_real, id])
+    return res.status(200).json({mensagem: "Tarefa concluída!"})
+  } catch (error) {
+    return res.status(500).json({erro: "Erro no servidor!"})
   }
-  const novoValor = "concluído"
-  const date_finish_real = Date().toISOString().slice(0, 10)
-  const query2 = "UPDATE tarefas SET status = ?, date_finish_real = ?  WHERE id = ?"
-  await pool.execute(query2, [novoValor, date_finish_real, id])
-  res.status(200).json({mensagem: "Tarefa concluída!"})
 })
 
 
 // PATCH  -- Alterar o status para " atrasado"
-app.patch("/api/tarefas/:id/status", async (req,res)=>{
-  const id = Number(req.params.id)
-  const query = "SELECT * FROM tarefas WHERE id = ?"
-  const [tarefa] = await pool.execute(query, [id])
-  if (tarefa.length === 0){
-      res.status(404).json({mensagem: "Esta tarefa não existe!"})
+app.patch("/api/tarefas/:id/statusAtrasado", validarId,  async (req,res)=>{
+  try {
+    const id = req.params.id
+    const query = "SELECT * FROM tarefas WHERE id = ?"
+    const [tarefa] = await pool.execute(query, [id])
+    if (tarefa.length === 0){
+        return res.status(404).json({mensagem: "Esta tarefa não existe!"})
+    }
+    const { date_finish_pred } = tarefa[0]
+    const date_finish_pred_clean = new Date(date_finish_pred).toISOString().slice(0, 10)
+    const novoValor = "atrasado"
+    const query2 = "UPDATE tarefas SET status = ?  WHERE id = ?"   
+    if (dataAtual > date_finish_pred_clean){
+        await pool.execute(query2, [novoValor, id])
+        return res.status(200).json({mensagem: "Tarefa está atrasada!"})
+    }
+    return res.status(200).json({mensagem: "Tarefa ainda não está atrasada!"})
+  } catch (error) {
+    return res.status(500).json({erro: "Erro no servidor!"})
   }
-  const novoValor = "atrasado"
-  const query2 = "UPDATE tarefas SET status = ?  WHERE id = ?"   
-  if (dataAtual > date_finish_pred){
-      await pool.execute(query2, [novoValor, id])
-  }
-  res.status(200).json({mensagem: "Tarefa está atrasada!"})
 })
 
 
 
 // DELETE
-app.delete("/api/tarefas/:id", async (req,res)=>{
-  const id = Number(req.params.id)
-  const query = "SELECT * FROM tarefas WHERE id = ?"
-  const [tarefa] = await pool.execute(query, [id])
-  if (tarefa.length === 0){
-      res.status(404).json({mensagem: "Esta tarefa não existe!"})
+app.delete("/api/tarefas/:id", validarId, async (req,res)=>{
+  try {
+    const id = req.params.id
+    const query = "SELECT * FROM tarefas WHERE id = ?"
+    const [tarefa] = await pool.execute(query, [id])
+    if (tarefa.length === 0){
+        return res.status(404).json({mensagem: "Esta tarefa não existe!"})
+    }
+    const query2 = "DELETE FROM tarefas WHERE id = ?"
+    await pool.execute(query2, [id])
+    return res.status(200).json({mensagem: "Tarefa eliminada com sucesso"})
+  } catch (error) {
+    return res.status(500).json({erro: "Erro no servidor!"})
   }
-  const query2 = "DELETE FROM tarefas WHERE id = ?"
-  await pool.execute(query2, [id])
-  res.status(200).json({mensagem: "Tarefa eliminada com sucesso"})
 })
 
 
@@ -198,4 +276,6 @@ app.listen(PORT, async ()=>{
     console.log("Erro na ligação ao servidor SQL")
   }
 })
+
+
 
