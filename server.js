@@ -63,7 +63,7 @@ function validarTarefa(req, res, next){
     return res.status(400).json({erro: "Descrição da tarefa obrigatoria"})
   }
   if (priorityNumero < 1 || priorityNumero > 3){
-    return res.status(400).json({erro: "Prioridade da tarefa obrigatoria"})
+    return res.status(400).json({erro: "Prioridade da tarefa obrigatoria (entre 1 e 3"})
   }
 
   if (!categoryValidas.includes(categoryLimpo)) {
