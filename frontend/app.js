@@ -24,7 +24,15 @@ function textoPrioridade(priority) {
   return "Sem prioridade";
 }
 
+
 // Criar o HTML de cada tarefa
+
+const aIniciar = tarefas.filter(t => t.status === "ainiciar").slice(0, 5);
+const iniciado = tarefas.filter(t => t.status === "iniciado").slice(0, 5);
+const concluido = tarefas.filter(t => t.status === "concluido").slice(0, 5);
+const atrasado = tarefas.filter(t => t.status === "atrasado").slice(0, 5);
+
+
 function criarCardTarefa(tarefa) {
   return `
     <div class="tarefa-card">

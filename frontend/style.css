@@ -594,3 +594,22 @@ footer {
 .sobre-card li {
   margin-bottom: 8px;
 }
+
+/* =========================
+   Edições Kanban 
+========================= */  
+
+
+   .kanban-home {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.kanban-coluna {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 18px;
+  min-height: 360px;
+}
