@@ -143,9 +143,9 @@ app.post("/api/tarefas", validarTarefa, async (req,res) =>{
     if (!name || !description || !category || !date_start || !date_finish_pred){
         return res.status(400).json({erro: "Preencher campos obrigatórios"})
     }
-    let status = "iniciado"
+    let status = "iniciada"
     if (date_start > dataAtual){
-      status = "planeado"
+      status = "planeada"
     }
     const query ="INSERT INTO tarefas (name, description, status, priority, category, date_start, date_finish_pred) VALUES (?,?,?,?,?,?,?)"
     const [resposta] = await pool.execute(query, [name, description, status, priority, category, date_start, date_finish_pred])
@@ -167,7 +167,7 @@ app.put("/api/tarefas/:id", validarId, validarTarefa,  async (req,res) =>{
   }
 
   // tarefas concluídas não podem ser alteradas
-  if (tarefa[0].status === "concluido") {
+  if (tarefa[0].status === "concluida") {
     return res.status(400).json({erro: "Não é possível alterar uma tarefa já concluída"})
   }
 
@@ -179,12 +179,12 @@ app.put("/api/tarefas/:id", validarId, validarTarefa,  async (req,res) =>{
   // só recalcula o status se a tarefa ainda não foi concluída nem está atrasada
   const statusAtual = tarefa[0].status
   let novoStatus = statusAtual
-  if (statusAtual === "planeado" || statusAtual === "iniciado") {
-    novoStatus = date_start > dataAtual ? "planeado" : "iniciado"
+  if (statusAtual === "planeada" || statusAtual === "iniciada") {
+    novoStatus = date_start > dataAtual ? "planeada" : "iniciada"
   } 
-  else if (statusAtual === "atrasado" && date_finish_pred >= dataAtual) {
+  else if (statusAtual === "atrasada" && date_finish_pred >= dataAtual) {
   // deadline foi corrigido para o futuro, deixa de estar atrasada
-  novoStatus = date_start > dataAtual ? "planeado" : "iniciado"
+  novoStatus = date_start > dataAtual ? "planeada" : "iniciada"
   }
 
   const query2 = "UPDATE tarefas SET name = ?, description = ?, status = ?, priority = ?, category = ?, date_start = ?, date_finish_pred = ? WHERE id = ?"
@@ -197,7 +197,7 @@ app.put("/api/tarefas/:id", validarId, validarTarefa,  async (req,res) =>{
 
 
 // PATCH  -- Alterar o status para "concluído"
-app.patch("/api/tarefas/:id/statusConcluido", validarId, async (req,res)=>{
+app.patch("/api/tarefas/:id/statusConcluida", validarId, async (req,res)=>{
   try {
     const id = req.params.id
     const query = "SELECT * FROM tarefas WHERE id = ?"
@@ -205,7 +205,7 @@ app.patch("/api/tarefas/:id/statusConcluido", validarId, async (req,res)=>{
     if (tarefa.length === 0){
         return res.status(404).json({mensagem: "Esta tarefa não existe!"})
     }
-    const novoValor = "concluido"
+    const novoValor = "concluida"
     const date_finish_real = new Date().toISOString().slice(0, 10)
     const query2 = "UPDATE tarefas SET status = ?, date_finish_real = ?  WHERE id = ?"
     await pool.execute(query2, [novoValor, date_finish_real, id])
@@ -216,8 +216,8 @@ app.patch("/api/tarefas/:id/statusConcluido", validarId, async (req,res)=>{
 })
 
 
-// PATCH  -- Alterar o status para " atrasado"
-app.patch("/api/tarefas/:id/statusAtrasado", validarId,  async (req,res)=>{
+// PATCH  -- Alterar o status para " atrasada"
+app.patch("/api/tarefas/:id/statusAtrasada", validarId,  async (req,res)=>{
   try {
     const id = req.params.id
     const query = "SELECT * FROM tarefas WHERE id = ?"
@@ -227,7 +227,7 @@ app.patch("/api/tarefas/:id/statusAtrasado", validarId,  async (req,res)=>{
     }
     const { date_finish_pred } = tarefa[0]
     const date_finish_pred_clean = new Date(date_finish_pred).toISOString().slice(0, 10)
-    const novoValor = "atrasado"
+    const novoValor = "atrasada"
     const query2 = "UPDATE tarefas SET status = ?  WHERE id = ?"   
     if (dataAtual > date_finish_pred_clean){
         await pool.execute(query2, [novoValor, id])
