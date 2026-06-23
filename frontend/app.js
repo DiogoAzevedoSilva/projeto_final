@@ -1,68 +1,29 @@
 // Lista temporária de tarefas
-let tarefas = [
-  {
-    id: 1,
-    name: "Organizar documentos pessoais",
-    description: "Separar documentos importantes e guardar numa pasta digital.",
-    category: "pessoal",
-    priority: 2,
-    date_start: "2026-06-18",
-    date_finish_pred: "2026-06-22",
-    status: "ainiciar"
-  },
-  {
-    id: 2,
-    name: "Preparar apresentação",
-    description: "Rever slides e alinhar os principais pontos do projeto.",
-    category: "profissional",
-    priority: 3,
-    date_start: "2026-06-18",
-    date_finish_pred: "2026-06-21",
-    status: "iniciado"
-  },
-  {
-    id: 3,
-    name: "Fazer caminhada",
-    description: "Reservar 30 minutos para caminhar e respirar um pouco.",
-    category: "bem_estar",
-    priority: 1,
-    date_start: "2026-06-17",
-    date_finish_pred: "2026-06-17",
-    status: "concluido"
-  },
-  {
-    id: 4,
-    name: "Ver episódio da série",
-    description: "Separar um momento leve para descansar depois do estudo.",
-    category: "lazer",
-    priority: 1,
-    date_start: "2026-06-14",
-    date_finish_pred: "2026-06-15",
-    status: "atrasado"
-  },
-  {
-    id: 5,
-    name: "Atualizar repositório",
-    description: "Fazer commit das alterações finais no GitHub.",
-    category: "profissional",
-    priority: 3,
-    date_start: "2026-06-18",
-    date_finish_pred: "2026-06-20",
-    status: "iniciado"
-  }
-];
+let tarefas = [];
 
 // Buscar elementos do HTML
 const formTarefa = document.getElementById("formTarefa");
 
 // Transformar prioridade em texto
 function textoPrioridade(priority) {
-  if (Number(priority) === 1) return "Low";
-  if (Number(priority) === 2) return "Medium";
-  if (Number(priority) === 3) return "High";
+  if (Number(priority) === 1) return "baixa";
+  if (Number(priority) === 2) return "média";
+  if (Number(priority) === 3) return "alta";
   return "Sem prioridade";
 }
-
+//carregar tarefas do backend
+function carregarTarefas() {
+  fetch("/api/tarefas")
+    .then((response) => response.json())
+    .then((data) => {
+      tarefas = data;
+      console.log("Tarefas carregadas:", tarefas);
+      renderizarKanbanHome();
+      renderizarListaTarefas();
+      console.log("Tarefas renderizadas:", tarefas);
+    });
+}
+ 
 // Criar o HTML de cada tarefa
 function criarCardTarefa(tarefa) {
   return `
@@ -113,28 +74,29 @@ function renderizarKanbanHome() {
   colAtrasado.innerHTML = "";
 
   tarefas
-    .filter((tarefa) => tarefa.status === "ainiciar")
+    .filter((tarefa) => tarefa.status === "planeada")
     .slice(0, 5)
     .forEach((tarefa) => {
+      console.log("Tarefa para iniciar:", tarefa);
       colAIniciar.innerHTML += criarCardTarefa(tarefa);
     });
 
   tarefas
-    .filter((tarefa) => tarefa.status === "iniciado")
+    .filter((tarefa) => tarefa.status === "iniciada")
     .slice(0, 5)
     .forEach((tarefa) => {
       colIniciado.innerHTML += criarCardTarefa(tarefa);
     });
 
   tarefas
-    .filter((tarefa) => tarefa.status === "concluido")
+    .filter((tarefa) => tarefa.status === "concluida")
     .slice(0, 5)
     .forEach((tarefa) => {
       colConcluido.innerHTML += criarCardTarefa(tarefa);
     });
 
   tarefas
-    .filter((tarefa) => tarefa.status === "atrasado")
+    .filter((tarefa) => tarefa.status === "atrasada")
     .slice(0, 5)
     .forEach((tarefa) => {
       colAtrasado.innerHTML += criarCardTarefa(tarefa);
@@ -169,10 +131,16 @@ if (formTarefa) {
       priority: document.getElementById("priority").value,
       date_start: document.getElementById("date_start").value,
       date_finish_pred: document.getElementById("date_finish_pred").value,
-      status: "ainiciar"
+      status: "planeada"
     };
 
-    tarefas.push(novaTarefa);
+fetch("/api/tarefas", {
+   method: "POST",
+   headers: {
+     "Content-Type": "application/json"
+   },
+   body: JSON.stringify(novaTarefa)
+ });  
 
     formTarefa.reset();
 
@@ -182,5 +150,6 @@ if (formTarefa) {
 }
 
 // Iniciar página
-renderizarKanbanHome();
+carregarTarefas();
 renderizarListaTarefas();
+renderizarKanbanHome();

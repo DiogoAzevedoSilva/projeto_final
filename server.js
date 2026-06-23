@@ -22,6 +22,7 @@ const pool = mysql.createPool({
 
 // MIDDLEWARES
 app.use(express.json())
+app.use(express.static("frontend"))
 
 // Midleware para validação
 function validarTarefa(req, res, next){
