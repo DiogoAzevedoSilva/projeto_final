@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS tarefas (
   id          	    	INT AUTO_INCREMENT PRIMARY KEY,
   name        		  	VARCHAR(200) NOT NULL,
   description 		  	TEXT NOT NULL,
-  status  	        	VARCHAR(50) DEFAULT "planeada",   -- "planeada", "iniciada", "concluida", "atrasada"
+  status  	        	VARCHAR(50) DEFAULT "planeada",   -- "planeado", "iniciado", "concluido", "atrasado"
   priority    		  	TINYINT DEFAULT 2,        -- 1=baixa, 2=media, 3=alta
   category    		  	VARCHAR(50) NOT NULL,  -- "bem_estar", "lazer", "pessoal", "profissional", "outro"
   date_start  		  	DATE,
