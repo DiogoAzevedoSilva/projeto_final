@@ -115,6 +115,7 @@ app.get("/", (req,res)=>{
 app.get("/api/tarefas", async (req,res)=>{
   try { 
     const get_tarefas = await pool.execute("SELECT * FROM tarefas")
+    console.log(get_tarefas[0])
     return res.status(200).json(get_tarefas[0])
   }
   catch (error) {

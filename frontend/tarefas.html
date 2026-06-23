@@ -69,8 +69,30 @@
           <button type="submit">Guardar tarefa</button>
         </fieldset>
       </form>
+<div class="kanban">
+  <section class="kanban-coluna">
+    <h3>A iniciar</h3>
+    <div id="tarefasAIniciar" class="kanban-tarefas"></div>
+  </section>
 
-      <div class="lista-tarefas">
+  <section class="kanban-coluna">
+    <h3>Iniciado</h3>
+    <div id="tarefasIniciado" class="kanban-tarefas"></div>
+  </section>
+
+  <section class="kanban-coluna">
+    <h3>Concluído</h3>
+    <div id="tarefasConcluido" class="kanban-tarefas"></div>
+  </section>
+
+  <section class="kanban-coluna">
+    <h3>Atrasado</h3>
+    <div id="tarefasAtrasado" class="kanban-tarefas"></div>
+  </section>
+</div>
+
+
+      <!-- <div class="lista-tarefas">
         <div class="tarefa-card">
           <h4>Estudar Node.js</h4>
           <p>Rever Express, rotas e ligação ao MySQL.</p>
@@ -87,11 +109,11 @@
             <button class="btn-apagar">Apagar</button>
           </div>
         </div>
-      </div>
+      </div> -->
     </section>
   </main>
 
-  <footer>
+    <footer>
     <p>TaskFlow © 2026</p>
   </footer>
 
