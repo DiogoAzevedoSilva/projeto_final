@@ -42,11 +42,11 @@ Antes de iniciar, certificarmo-nos de ter instalado:
 3. Criar um ficheiro `.env` na raiz do projeto, inicialmente o ficheiro vai aparecer como `.env.example`, temos que trocar o nome do ficheiro para 
 apenas `.env` com as seguintes variáveis:  
    ```env
-   DATABASE_HOST=localhost
+   DATABASE_HOST="localhost"
    DATABASE_PORT=3306
-   DATABASE_USER=root
-   DATABASE_PASSWORD=nossa senha
-   DATABASE_NAME=to_do_list_db
+   DATABASE_USER="root"
+   DATABASE_PASSWORD="nossa senha"
+   DATABASE_NAME="to_do_list_db"
    ```
 4. Criar a base de dados e a tabela executando o ficheiro SQL fornecido:
    ```bash
