@@ -37,7 +37,8 @@ Antes de iniciar, certificarmo-nos de ter instalado:
    ```bash
    npm install
    ```
-3. Crie um ficheiro `.env` na raiz do projeto com as seguintes variáveis:
+3. Criar um ficheiro `.env` na raiz do projeto, inicialmente o ficheiro vai aparecer como `.env.example`, temos que trocar o nome do ficheiro para 
+apenas `.env` com as seguintes variáveis:
    ```env
    DATABASE_HOST=localhost
    DATABASE_PORT=3306
