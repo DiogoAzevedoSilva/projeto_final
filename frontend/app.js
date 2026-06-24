@@ -266,4 +266,4 @@ function atualizarResumoTarefas() {
   totalIniciadas.textContent = iniciadas;
   totalAtrasadas.textContent = atrasadas;
   totalConcluidas.textContent = concluidas;
-}
+} 
