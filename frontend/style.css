@@ -867,3 +867,17 @@ footer {
   background: #f3f4f6;
   border-color: #d1d5db;
 }
+
+.hero-texto h2 {
+  font-size: 1.8rem;
+}
+
+#tarefas .topo-tarefas h2 {
+  font-size: 1.8rem;
+}
+
+.hero-texto p,
+#tarefas .topo-tarefas p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
