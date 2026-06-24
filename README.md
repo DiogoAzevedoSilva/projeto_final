@@ -35,10 +35,12 @@ Antes de iniciar, certificarmo-nos de ter instalado:
    ```
 2. Instale as dependências:
    ```bash
-   npm install
+   npm install express nodemon dotenv mysql2
+   npm init -y
+   ir ao ficheiro "package.json" na linha 8 e preciso colocar uma virgula no final e na linha 9 "dev": "nodemon server.js"
    ```
 3. Criar um ficheiro `.env` na raiz do projeto, inicialmente o ficheiro vai aparecer como `.env.example`, temos que trocar o nome do ficheiro para 
-apenas `.env` com as seguintes variáveis:
+apenas `.env` com as seguintes variáveis:  
    ```env
    DATABASE_HOST=localhost
    DATABASE_PORT=3306
