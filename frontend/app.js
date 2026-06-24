@@ -71,6 +71,8 @@ function criarCardTarefa(tarefa) {
             ? `<button class="btn-concluir" onclick="concluirTarefa(${tarefa.id})">Concluir</button>`
             : ""
         }
+        
+        <button class="btn-editar" onclick="editarTarefa(${tarefa.id})">Editar</button>
         <button class="btn-apagar" onclick="apagarTarefa(${tarefa.id})">Apagar</button>
       </div>
     </div>
@@ -185,6 +187,58 @@ async function concluirTarefa(id) {
   }
 }
 
+async function editarTarefa(id) {
+  const tarefa = tarefas.find((item) => item.id === id);
+
+  if (!tarefa) {
+    alert("Tarefa não encontrada");
+    return;
+  }
+
+  const name = prompt("Nome da tarefa:", tarefa.name);
+  const description = prompt("Descrição:", tarefa.description);
+  const category = prompt("Categoria: pessoal, profissional, bem_estar, lazer ou outro", tarefa.category);
+  const priority = prompt("Prioridade 1, 2 ou 3:", tarefa.priority);
+  const date_start = prompt("Data de início YYYY-MM-DD:", formatarData(tarefa.date_start));
+  const date_finish_pred = prompt("Data fim prevista YYYY-MM-DD:", formatarData(tarefa.date_finish_pred));
+
+  if (!name || !description || !category || !priority || !date_start || !date_finish_pred) {
+    alert("Edição cancelada ou campos incompletos");
+    return;
+  }
+
+  const tarefaAtualizada = {
+    name,
+    description,
+    category,
+    priority,
+    date_start,
+    date_finish_pred
+  };
+
+  try {
+    const response = await fetch(`${API_URL}/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(tarefaAtualizada)
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert(data.erro || "Erro ao atualizar tarefa");
+      return;
+    }
+
+    await carregarTarefas();
+  } catch (error) {
+    console.error("Erro ao atualizar tarefa:", error);
+    alert("Erro ao atualizar tarefa");
+  }
+}
+
 async function apagarTarefa(id) {
   const confirmar = confirm("Tem certeza que deseja apagar esta tarefa?");
 
@@ -199,10 +253,11 @@ async function apagarTarefa(id) {
 
     const data = await response.json();
 
-    if (!response.ok) {
-      alert(data.erro || "Erro ao apagar tarefa");
-      return;
-    }
+   if (!response.ok) {
+  console.log("Erro do PUT:", data);
+  alert(data.erro || data.error || "Erro ao atualizar tarefa");
+  return;
+}
 
     await carregarTarefas();
   } catch (error) {
