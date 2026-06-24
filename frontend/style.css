@@ -789,27 +789,57 @@ footer {
 
 .kanban-home {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  margin-top: 28px;
+  grid-template-columns: repeat(4, minmax(240px, 1fr));
+  gap: 18px;
+  align-items: start;
 }
 
 .kanban-coluna {
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 18px;
-  padding: 18px;
-  min-height: 360px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px;
+  min-height: 280px;
+  max-height: 620px;
+  overflow-y: auto;
 }
 
 .kanban-coluna h3 {
-  margin: 0 0 16px;
-  font-size: 1.3rem;
-  color: #111827;
+ position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f8fafc;
+  margin: -16px -16px 14px;
+  padding: 16px;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .kanban-coluna .tarefa-card {
   margin-bottom: 14px;
+}
+
+.kanban-home .tarefa-card h4,
+.kanban-coluna .tarefa-card h4 {
+  font-size: 0.95rem;
+}
+
+.kanban-home .tarefa-card p,
+.kanban-coluna .tarefa-card p {
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.kanban-home .tarefa-meta,
+.kanban-coluna .tarefa-meta,
+.kanban-home .tarefa-datas,
+.kanban-coluna .tarefa-datas {
+  font-size: 0.75rem;
+}
+
+.kanban-home .tarefa-acoes button,
+.kanban-coluna .tarefa-acoes button {
+  font-size: 0.75rem;
+  padding: 7px 10px;
 }
 
 /* Cores suaves por categoria no card */
