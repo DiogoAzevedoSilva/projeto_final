@@ -41,6 +41,7 @@ async function carregarTarefas() {
 
     renderizarKanban();
     renderizarCategoria();
+    atualizarResumoTarefas();
     
   } catch (error) {
     console.error("Erro ao carregar tarefas:", error);
@@ -244,4 +245,25 @@ function renderizarCategoria() {
   tarefasFiltradas.forEach((tarefa) => {
     listaCategoria.innerHTML += criarCardTarefa(tarefa);
   });
+}
+
+function atualizarResumoTarefas() {
+  const totalPlaneadas = document.getElementById("totalPlaneadas");
+  const totalIniciadas = document.getElementById("totalIniciadas");
+  const totalAtrasadas = document.getElementById("totalAtrasadas");
+  const totalConcluidas = document.getElementById("totalConcluidas");
+
+  if (!totalPlaneadas || !totalIniciadas || !totalAtrasadas || !totalConcluidas) {
+    return;
+  }
+
+  const planeadas = tarefas.filter((tarefa) => tarefa.status === "planeada").length;
+  const iniciadas = tarefas.filter((tarefa) => tarefa.status === "iniciada").length;
+  const atrasadas = tarefas.filter((tarefa) => tarefa.status === "atrasada").length;
+  const concluidas = tarefas.filter((tarefa) => tarefa.status === "concluida").length;
+
+  totalPlaneadas.textContent = planeadas;
+  totalIniciadas.textContent = iniciadas;
+  totalAtrasadas.textContent = atrasadas;
+  totalConcluidas.textContent = concluidas;
 }
