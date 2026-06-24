@@ -45,12 +45,12 @@ apenas `.env` com as seguintes variáveis:
    DATABASE_HOST="localhost"
    DATABASE_PORT=3306
    DATABASE_USER="root"
-   DATABASE_PASSWORD="nossa senha"
+   DATABASE_PASSWORD="**nossa senha**"
    DATABASE_NAME="to_do_list_db"
    ```
 4. Criar a base de dados e a tabela executando o ficheiro SQL fornecido:
    ```bash
-   mysql -u root -p < projeto_final\ DB.sql
+   mysql -u root -p < projeto_final_DB.sql
    ```
 
 ## Execução
@@ -77,7 +77,7 @@ http://localhost:3000
 
 - `server.js` — servidor Express e rotas da API
 - `frontend/` — páginas e recursos do frontend
-- `projeto_final DB.sql` — script de criação da base de dados
+- `projeto_final_DB.sql` — script de criação da base de dados
 
 ## Observações
 

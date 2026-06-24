@@ -20,10 +20,10 @@ function textoPrioridade(priority) {
 }
 
 function textoStatus(status) {
-  if (status === "planeada") return "A iniciar";
-  if (status === "iniciada") return "Iniciado";
-  if (status === "concluida") return "Concluido";
-  if (status === "atrasada") return "Atrasado";
+  if (status === "planeada") return "Planeada"; 
+  if (status === "iniciada") return "Iniciada"; 
+  if (status === "concluida") return "Concluida"; 
+  if (status === "atrasada") return "Atrasada"; 
   return status || "Sem status";
 }
 
@@ -36,8 +36,6 @@ async function carregarTarefas() {
     }
 
     tarefas = await response.json();
-
-    console.log("Tarefas carregadas:", tarefas);
 
     renderizarKanban();
     renderizarCategoria();
@@ -266,4 +264,4 @@ function atualizarResumoTarefas() {
   totalIniciadas.textContent = iniciadas;
   totalAtrasadas.textContent = atrasadas;
   totalConcluidas.textContent = concluidas;
-} 
+}

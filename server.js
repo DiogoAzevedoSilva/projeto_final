@@ -4,7 +4,6 @@ require("dotenv").config()
 // Modulos importados
 const express = require("express")
 const app = express()
-// const path = require("path")  -- não está a ser utilizado!!
 const mysql = require("mysql2/promise")
 const PORT = 3000
 
@@ -98,7 +97,7 @@ function validarId(req, res, next){
   if (!Number.isInteger(id) || id <= 0) {
     return res.status(400).json({erro: "ID inválido"})
   }
-  req.params.id = id // já convertido, evita repetir Number() nas rotas
+  req.params.id = id 
   next()
 }
 
@@ -115,7 +114,6 @@ app.get("/", (req,res)=>{
 app.get("/api/tarefas", async (req,res)=>{
   try { 
     const get_tarefas = await pool.execute("SELECT * FROM tarefas")
-    console.log(get_tarefas[0])
     return res.status(200).json(get_tarefas[0])
   }
   catch (error) {
