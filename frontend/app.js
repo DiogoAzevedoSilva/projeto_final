@@ -36,7 +36,7 @@ async function carregarTarefas() {
     }
 
     tarefas = await response.json();
-
+    console.log(tarefas)  // teste
     renderizarKanban();
     renderizarCategoria();
     atualizarResumoTarefas();
@@ -116,19 +116,6 @@ function renderizarKanban() {
   });
 }
 
-// function renderizarListaTarefas() {
-//   const listaTarefas = document.querySelector(".lista-tarefas");
-
-//   if (!listaTarefas) {
-//     return;
-//   }
-
-//   listaTarefas.innerHTML = "";
-
-//   tarefas.forEach((tarefa) => {
-//     listaTarefas.innerHTML += criarCardTarefa(tarefa);
-//   });
-// }
 
 async function criarTarefa(event) {
   event.preventDefault();
